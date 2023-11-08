@@ -3,7 +3,8 @@ import { FaSun, FaMoon, FaClock } from 'react-icons/fa';
 import { MdRotateRight } from 'react-icons/md';
 import axios from 'axios';
 import Modal from './modal';
-import Navbar from '../componente/Navbar';
+import { FaPlus } from 'react-icons/fa'; // Import the icon for the button
+
 
 <Modal></Modal>
 const Tabla = () => {
@@ -26,7 +27,7 @@ const Tabla = () => {
 
     const handleInputChange = (event, header, timeLabel, idx) => {
         const value = event.target.value;
-        const cellKey = `${header}${timeLabel}${idx}`;
+        const cellKey = `${header}_${timeLabel}_${idx}`;
         setInputValues(prevValues => ({
             ...prevValues,
             [cellKey]: value
@@ -34,7 +35,7 @@ const Tabla = () => {
     };
 
     const selectMedicamento = (medicamento, header, timeLabel, idx) => {
-        const cellKey = `${header}${timeLabel}${idx}`;
+        const cellKey = `${header}_${timeLabel}_${idx}`;
         setInputValues(prevValues => ({
             ...prevValues,
             [cellKey]: medicamento.nombre
@@ -100,11 +101,23 @@ const Tabla = () => {
     const columnHeaders = ['Medications', 'Dosage', 'Time', 'Date', 'Comments'];
 
     return (
-        <>
-        <Navbar/>
-
         <div style={styles.container}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={styles.title}>CUADRO DE MEDICAMENTOS</div>
+            <button
+                style={{
+                    backgroundColor: '#00A6A4',
+                    border: 'none',
+                    borderRadius: '5px',
+                    padding: '10px',
+                    color: 'white',
+                    cursor: 'pointer',
+                }}
+                onClick={() => setModalOpen(true)}
+            >
+                <FaPlus style={{ marginRight: '5px' }} /> Agregar Medicamento
+            </button>
+        </div>
             {isModalOpen && <Modal onClose={() => setModalOpen(false)} />}
             <table style={styles.table}>
                 <thead>
@@ -130,12 +143,12 @@ const Tabla = () => {
                                                 <input
                                                     type="text"
                                                     style={styles.inputField}
-                                                    value={inputValues[`${header}${time.label}${idx}`] || ''}
+                                                    value={inputValues[`${header}_${time.label}_${idx}`] || ''}
                                                     onChange={event => handleInputChange(event, header, time.label, idx)}
-                                                    onFocus={() => setActiveCell(`${header}${time.label}${idx}`)}
+                                                    onFocus={() => setActiveCell(`${header}_${time.label}_${idx}`)}
                                                     onBlur={() => setTimeout(() => setActiveCell(null), 150)}
                                                 />
-                                                {activeCell === `${header}${time.label}${idx}` && matchedMedicamentos.length > 0 && (
+                                                {activeCell === `${header}_${time.label}_${idx}` && matchedMedicamentos.length > 0 && (
                                                     <div style={{
                                                         position: 'absolute',
                                                         backgroundColor: 'white',
@@ -163,9 +176,7 @@ const Tabla = () => {
                 </tbody>
             </table>
         </div>
-        </>
     );
 };
-
 
 export default Tabla;
